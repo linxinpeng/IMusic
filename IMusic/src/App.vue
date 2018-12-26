@@ -16,5 +16,14 @@ export default {
 </script>
 
 <style lang="scss">
-  
+  body,html,p{
+    margin: 0;
+    color: #999;
+  }
+  ul{
+    padding: 0;
+    li{
+      list-style: none;
+    }
+  }
 </style>
