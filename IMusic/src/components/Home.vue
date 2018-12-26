@@ -44,13 +44,14 @@
         </div>
         <div class="h-play">
             <div class="p-inner">
+                <audio ref="audio" :src="songList.songs[0].url">亲 您的浏览器不支持html5的audio标签</audio>
                 <div class="p-progress" :style="`width:${value}%`"></div>
                 <span class="i-left"><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1752432182,2397597091&fm=26&gp=0.jpg" /></span>
                 <span class="i-center">
-                    <h4>朗朗的新专辑</h4>
-                    <p>朗朗</p>
+                    <h4>{{songList.songs[0].name}}</h4>
+                    <p>{{songList.songs[0].singer}}</p>
                 </span>
-                <span class="i-right" @click="onPlay"><i class="far fa-play-circle"></i></span>
+                <span class="i-right" @click="onPlay"><i :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i></span>
             </div>
         </div>
         <div style="height: 62px"></div>
@@ -93,19 +94,40 @@ export default {
                 }
             ],
             value:0,
-            time: null
+            time: null,
+            songList:{},
+            isPlay: false
         }
     },
     methods:{
         onPlay(){
-          this.time = setInterval(()=>{
-               this.value++
-               if(this.value == 100){
-                   clearInterval(this.time)
-               }
-           },100)
+            if(this.isPlay){
+                this.$refs.audio.pause();
+                this.isPlay = false;
+            }else{
+                this.$refs.audio.play();
+                this.isPlay = true;
+                this.time = setInterval(()=>{
+                    if(this.$refs.audio.currentTime == this.$refs.audio.duration){
+                        clearInterval(this.time);
+                        this.isPlay = false;
+                        return
+                    }
+                this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
+            },10)
+            }
+        },
+       async getMusic(){
+            const resp = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3778678&limit=10&offset=0');
+            if(resp.status == 200){
+                this.songList = resp.data.data;
+            }
         }
-    }
+    },
+    mounted() {
+        this.getMusic();
+        
+    },
 }
 </script>
 <style lang="scss" scoped>
@@ -224,7 +246,6 @@ export default {
                     height: 1px;
                     z-index: 2;
                     background: red;
-                    transition: all .3s ease;
                 }
                  span{
                     float: left;
