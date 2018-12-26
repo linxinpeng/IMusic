@@ -1,6 +1,6 @@
 # lxp
 
-> A Vue.js project
+IMusic 音乐播放器
 
 ## Build Setup
 

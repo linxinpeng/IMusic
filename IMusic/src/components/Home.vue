@@ -243,9 +243,9 @@ export default {
                 .p-progress{
                     position: absolute;
                     bottom: 0;
-                    height: 1px;
+                    height: 2px;
                     z-index: 2;
-                    background: red;
+                    background: rgba(37, 214, 216, 0.9);
                 }
                  span{
                     float: left;
