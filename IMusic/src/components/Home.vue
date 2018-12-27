@@ -43,7 +43,6 @@
                 </li>
             </ul>
         </div>
-        <i-play :songs="songList.songs[0]"></i-play>
     </div>
 </template>
 <script>

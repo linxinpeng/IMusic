@@ -52,7 +52,6 @@
                </div>
            </li>
         </ul>
-        <i-play :songs="bSongList.songs[0]"></i-play>
     </div>
 </template>
 <script>

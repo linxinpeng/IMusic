@@ -6,6 +6,7 @@ import router from '../router/index'
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import store from './store'
  
 Vue.use(VueAxios, axios)
 Vue.use(VueRouter)
@@ -14,5 +15,6 @@ Vue.use(MintUI)
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })

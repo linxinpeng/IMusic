@@ -1,15 +1,15 @@
 <template>
     <div class="i-billboard">
         <div class="b-header">
-            <mt-header title="排行">
-                <router-link to="/" slot="left">
+            <mt-header :title="songList.songListName">
+                <span @click="$router.go(-1)" slot="left">
                 <mt-button icon="back"></mt-button>
-                </router-link>
+                </span>
             </mt-header>
         </div>
         <div style="height: 40px"></div>
         <div class="b-center">
-            <div class="c-item" v-for="(item,index) in songList.songs || []" :key="index" @click="current = item">
+            <div class="c-item" v-for="(item,index) in songList.songs || []" :key="index" @click="play(item)">
                 <span class="i-left"><i class="ion ion-md-add-circle-outline"></i></span>
                 <span class="i-right">
                     <span class="r-order">
@@ -25,7 +25,6 @@
                 </span>
             </div>
         </div>
-        <i-play :songs="current"></i-play>
     </div>    
 </template>
 <script>
@@ -34,8 +33,7 @@ export default {
     components:{IPlay},
     data(){
         return{
-            songList:{},
-            current:{}
+            songList:{}
         }
     },
     methods:{
@@ -44,6 +42,9 @@ export default {
             if(resp.status == 200){
                 this.songList = resp.data.data;
             }
+        },
+        play(item){
+            this.$store.dispatch('update',item)
         }
     },
     created(){

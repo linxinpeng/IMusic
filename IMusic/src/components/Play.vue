@@ -17,18 +17,22 @@
 </template>
 <script>
 export default {
-    props:['songs'],
+    props:{
+        songs:{
+            type:Object
+        }
+    },
     data(){
         return{
             value: 0,
-            isplay:false,
+            isPlay:false,
             time: null
         }
     },
     watch:{
         songs(){
             this.value = 0;
-            this.isplay = false;
+            this.isPlay = false;
             this.time = null;
         }
     },
@@ -45,9 +49,9 @@ export default {
                         clearInterval(this.time);
                         this.isPlay = false;
                         return
-                    }
-                this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
-            },10)
+                        }
+                    this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
+                },10)
             }
         },
     }
