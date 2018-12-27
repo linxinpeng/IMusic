@@ -1,13 +1,14 @@
 <template>
     <div class="i-home">
         <div class="h-header">
-            <mt-header title="音乐馆">
+            <mt-header title="I Music">
                 <router-link to="/" slot="left">
                     <mt-button><i class="ion ion-md-menu"></i></mt-button>
                 </router-link>
                 <mt-button slot="right" icon="ion ion-md-search"></mt-button>
             </mt-header>
         </div>
+        <div style="height: 40px;"></div>
         <div class="h-banner">
             <mt-swipe :auto="4000">
                 <mt-swipe-item class="slide1" v-for="(item,index) in hrefs" :key="index">
@@ -18,12 +19,12 @@
         <div class="h-type">
             <ul>
                 <li v-for="(item,index) in list" :key="index">
-                    <a>
+                    <router-link :to="item.path">
                         <div class="t-box">
                             <i :class="item.icon" :style="`color: ${item.color}`"></i>
                             <span>{{item.title}}</span>
                         </div>
-                    </a>
+                    </router-link>
                 </li>
             </ul>
         </div>
@@ -42,23 +43,13 @@
                 </li>
             </ul>
         </div>
-        <div class="h-play">
-            <div class="p-inner">
-                <audio ref="audio" :src="songList.songs[0].url">亲 您的浏览器不支持html5的audio标签</audio>
-                <div class="p-progress" :style="`width:${value}%`"></div>
-                <span class="i-left"><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1752432182,2397597091&fm=26&gp=0.jpg" /></span>
-                <span class="i-center">
-                    <h4>{{songList.songs[0].name}}</h4>
-                    <p>{{songList.songs[0].singer}}</p>
-                </span>
-                <span class="i-right" @click="onPlay"><i :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i></span>
-            </div>
-        </div>
-        <div style="height: 62px"></div>
+        <i-play :songs="songList.songs[0]"></i-play>
     </div>
 </template>
 <script>
+import IPlay from './play'
 export default {
+    components:{IPlay},
     data(){
         return{
             hrefs:[
@@ -67,14 +58,14 @@ export default {
                 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2833203770,4110281004&fm=26&gp=0.jpg'
             ],
             list:[
-                { icon: 'ion ion-md-list-box',title:'歌单',color:'rgba(37,214,216,.9)' },
-                { icon: 'ion ion-md-radio',title:'电台' ,color:'rgba(131,95,196,.9)' },
-                { icon: 'ion ion-md-ribbon',title:'排行',color:'rgba(245,83,122,.9)'  },
-                { icon: 'ion ion-md-disc',title:'专辑' ,color:'rgba(8,130,241,.9)' },
-                { icon: 'ion ion-md-musical-notes',title:'新推' ,color:'rgba(0,156,245,.9)' },
-                { icon: 'ion ion-md-browsers',title:'日推' ,color:'rgba(244,76,177,.9)' },
-                { icon: 'ion ion-ios-headset',title:'歌手',color:'rgba(139,104,200,.9)'  },
-                { icon: 'ion ion-md-tv',title:'MV',color:'rgba(37,214,216,.9)'  }
+                { icon: 'ion ion-md-list-box',title:'歌单',color:'rgba(37,214,216,.9)' ,path:'/'},
+                { icon: 'ion ion-md-radio',title:'电台' ,color:'rgba(131,95,196,.9)' ,path:'/'},
+                { icon: 'ion ion-md-ribbon',title:'排行',color:'rgba(245,83,122,.9)' ,path:'/recommend' },
+                { icon: 'ion ion-md-disc',title:'专辑' ,color:'rgba(8,130,241,.9)' ,path:'/' },
+                { icon: 'ion ion-md-musical-notes',title:'新推' ,color:'rgba(0,156,245,.9)' ,path:'/' },
+                { icon: 'ion ion-md-browsers',title:'日推' ,color:'rgba(244,76,177,.9)' ,path:'/'},
+                { icon: 'ion ion-ios-headset',title:'歌手',color:'rgba(139,104,200,.9)' ,path:'/'},
+                { icon: 'ion ion-md-tv',title:'MV',color:'rgba(37,214,216,.9)' ,path:'/' }
             ],
             recom:[
                 {
@@ -93,30 +84,10 @@ export default {
                     singer:'Ruerer'
                 }
             ],
-            value:0,
-            time: null,
             songList:{},
-            isPlay: false
         }
     },
     methods:{
-        onPlay(){
-            if(this.isPlay){
-                this.$refs.audio.pause();
-                this.isPlay = false;
-            }else{
-                this.$refs.audio.play();
-                this.isPlay = true;
-                this.time = setInterval(()=>{
-                    if(this.$refs.audio.currentTime == this.$refs.audio.duration){
-                        clearInterval(this.time);
-                        this.isPlay = false;
-                        return
-                    }
-                this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
-            },10)
-            }
-        },
        async getMusic(){
             const resp = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3778678&limit=10&offset=0');
             if(resp.status == 200){
@@ -133,6 +104,9 @@ export default {
 <style lang="scss" scoped>
     .i-home{
         .h-header{
+            position: fixed;
+            top: 0;
+            width: 100%;
             .mint-header{
                 background: #fff;
                 color: #999;
@@ -226,64 +200,6 @@ export default {
                             color: #aaa;
                         }
                     }
-                }
-            }
-           
-        }
-        .h-play{
-            position: fixed;
-            bottom: 0;
-            background: #fff;
-            height: 61px;
-            width: 100%;
-            .p-inner{
-                height: 60px;
-                position: relative;
-                border-top: 1px solid #eee;
-                .p-progress{
-                    position: absolute;
-                    bottom: 0;
-                    height: 2px;
-                    z-index: 2;
-                    background: rgba(37, 214, 216, 0.9);
-                }
-                 span{
-                    float: left;
-                }
-                .i-left{
-                    width: 10%;
-                    margin-left: 20px;
-                    padding-top: 10px;
-                    box-sizing: border-box;
-                    img{
-                        max-width: 100%;
-                        max-height: 100%;
-                    }
-                }
-                .i-center{
-                    width: 60%;
-                    padding-left: 15px;
-                    padding-top: 10px;
-                    box-sizing: border-box;
-                    h4{
-                        margin: 0;
-                        font-size: 12px;
-                        // margin-top: 4px;
-                        color: #666;
-                    }
-                    p{
-                        margin: 0;
-                        font-size: 12px;
-                        margin-top: 3px;
-                    }
-                }
-                .i-right{
-                    padding-top: 13px;
-                    box-sizing: border-box;
-                    padding-left: 24px;
-                    width: calc(30% - 20px);
-                    color: rgba(37, 214, 216, 0.9);
-                    font-size: 28px;
                 }
             }
            
