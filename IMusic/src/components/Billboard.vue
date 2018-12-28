@@ -104,6 +104,7 @@ export default {
                     p{
                         color: #999;
                         font-size: 12px;
+                        white-space: nowrap;
                     }
                 }
                 .r-right{

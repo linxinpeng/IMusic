@@ -5,9 +5,19 @@
                 <router-link to="/" slot="left">
                     <mt-button><i class="ion ion-md-menu"></i></mt-button>
                 </router-link>
-                <mt-button slot="right" icon="ion ion-md-search"></mt-button>
+                <mt-button slot="right" icon="ion ion-md-search" @click.native="showSearch = true"></mt-button>
             </mt-header>
         </div>
+        <mt-popup v-model="showSearch" position="right" class="h-search" :modal="false">
+            <mt-search autofocus v-model="value" @keyup.native="result">
+                <mt-cell
+                    v-for="(item,index) in results"
+                    :title="item.name"
+                    :value="item.singer"
+                    :key="index">
+                </mt-cell>
+            </mt-search>
+        </mt-popup>
         <div style="height: 40px;"></div>
         <div class="h-banner">
             <mt-swipe :auto="4000">
@@ -51,6 +61,8 @@ export default {
     components:{IPlay},
     data(){
         return{
+            value:'',
+            results:[],
             hrefs:[
                 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=342462208,241731034&fm=26&gp=0.jpg',
                 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1751299247,2746970245&fm=26&gp=0.jpg',
@@ -84,6 +96,7 @@ export default {
                 }
             ],
             songList:{},
+            showSearch:false
         }
     },
     methods:{
@@ -91,6 +104,12 @@ export default {
             const resp = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3778678&limit=10&offset=0');
             if(resp.status == 200){
                 this.songList = resp.data.data;
+            }
+        },
+        async result(){
+            const resp = await this.axios.get(`https://api.bzqll.com/music/netease/search?key=579621905&s=${this.value}&type=song&limit=100&offset=0`);
+            if(resp.status == 200){
+                this.results = resp.data.data
             }
         }
     },
@@ -112,6 +131,11 @@ export default {
                 font-size: 15px;
             }
         }
+        .h-search{
+                width: 100%;
+                height: 100%;
+                background-color: #fff;
+            }
         .h-banner{
             height: 130px;
             width: calc(100% - 20px);
