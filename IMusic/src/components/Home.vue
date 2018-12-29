@@ -14,7 +14,9 @@
                     v-for="(item,index) in results"
                     :title="item.name"
                     :value="item.singer"
-                    :key="index">
+                    :key="index"
+                    @click.native="update(item)"
+                    >
                 </mt-cell>
             </mt-search>
         </mt-popup>
@@ -107,10 +109,16 @@ export default {
             }
         },
         async result(){
-            const resp = await this.axios.get(`https://api.bzqll.com/music/netease/search?key=579621905&s=${this.value}&type=song&limit=100&offset=0`);
-            if(resp.status == 200){
-                this.results = resp.data.data
+            if(this.value.trim()){
+                const resp = await this.axios.get(`https://api.bzqll.com/music/netease/search?key=579621905&s=${this.value}&type=song&limit=100&offset=0`);
+                if(resp.status == 200){
+                    this.results = resp.data.data
+                }
             }
+        },
+         update(item){
+            this.$store.dispatch('update',item);
+            this.showSearch = false
         }
     },
     mounted() {
