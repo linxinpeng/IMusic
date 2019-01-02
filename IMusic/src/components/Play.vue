@@ -1,6 +1,6 @@
 <template>
     <div class="i-play" v-if="Object.keys(songs).length>0">
-        <div class="h-play" @click="expand">
+        <div class="h-play" @click="show= true">
                 <div class="p-inner">
                     <audio ref="audio" :src="songs.url"  autoplay="autoplay"></audio>
                     <div class="p-progress" :style="`width:${value}%`"></div>
@@ -15,7 +15,14 @@
             <div style="height: 62px"></div>
             <transition name="fade">
                 <div class="h-mask" v-if="show">
-                    <h3 @click="show = false">111</h3>
+                    <div class="m-inner">
+                        <div class="m-singer">
+
+                        </div>
+                        <div class="m-lrc">
+                            <p v-for="(item,index) in lrc" :key="index" :class="flag == item?'m-target':''">{{item[1]}}</p>
+                        </div>
+                    </div>
                 </div>
             </transition>
     </div>    
@@ -33,15 +40,23 @@ export default {
             isPlay:false,
             time: null,
             show: false,
-            lrc:''
+            lrc:[],
+            flag:[]
         }
     },
     watch:{
         songs(){
             this.value = 0;
             this.isPlay = false;
-            this.time = null;
+            clearInterval(this.time);
             this.onPlay();
+        },
+        flag(){
+            if(this.show){
+                $(".m-lrc").animate({scrollTop: $(".m-target").offset().top });
+                // $('.m-lrc').scrollTop($(".m-target").offset().top)
+                console.log($(".m-target").offset().top)
+            }
         }
     },
     methods:{
@@ -52,13 +67,17 @@ export default {
             }else{
                 this.$refs.audio.play();
                 this.isPlay = true;
+                this.expand();
                 this.time = setInterval(()=>{
                     if(this.$refs.audio.currentTime == this.$refs.audio.duration){
                         clearInterval(this.time);
                         this.isPlay = false;
                         return
                         }
-                    this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
+                this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
+                let lr = this.lrc.filter( v => v[0]<=this.$refs.audio.currentTime);
+                this.flag = lr[lr.length-1];
+                
                 },10)
             }
         },
@@ -69,24 +88,20 @@ export default {
             }
         },
         parseLyric(text) {
-            // const lyric = text.split(']'); 
-            console.log(lyric)
-            // var _l = lyric.length; 
-            // var lrc = new Array(); 
-            // for(var i=0;i<_l;i++) {
-            //     var d = lyric[i].match(/\[\d{2}:\d{2}((\.|\:)\d{2})\]/g); 
-            //     var t = lyric[i].split(d); 
-            //     console.log(d)
-            //     if(d != null) { 
-            //         var dt = String(d).split(':'); 
-            //         var _t = Math.round(parseInt(dt[0].split('[')[1])*60+parseFloat(dt[1].split(']')[0])*100)/100; 
-            //         lrc.push([_t, t[1]]);
-            //     }
-            //     this.lrc = lrc;
-            // }
-
-
-
+            let currentTime = this.$refs.audio.currentTime;
+            const lyric = text.split(/[(\r\n)\r\n]+/);
+            var _l = lyric.length; 
+            var lrc = new Array(); 
+            for(var i=0;i<_l;i++) {
+                var d = lyric[i].match(/\[\d{2}:\d{2}((\.|\:)\d+)\]/g); 
+                var t = lyric[i].split(d); 
+                if(d != null) { 
+                    var dt = String(d).split(':');
+                    var _t = Math.round((parseInt(dt[0].split('[')[1])*60 + parseFloat(dt[1].split(']')[0]))*1000)/1000
+                    lrc.push([_t, t[1]]);
+                }
+                this.lrc = lrc;
+            }
         }
 
         
@@ -165,6 +180,30 @@ export default {
             width: 100%;
             height: 100%;
             background: #fff;
+            .m-inner{
+                position: relative;
+                width: 100%;
+                height: 100%;
+                .m-singer{
+                    height: 50%;
+                    width: 100%;
+                }
+                .m-lrc{
+                    position: absolute;
+                    bottom: 61px;
+                    left: 0;
+                    height: 150px;
+                    width: 100%;
+                    // background: #000;
+                    overflow: scroll;
+                    p{
+                        line-height: 30px;
+                        width: 100%;
+                        text-align: center;
+                        color: #666;
+                    }
+                }
+            }
         }
     }
 .fade-enter-active, .fade-leave-active {
