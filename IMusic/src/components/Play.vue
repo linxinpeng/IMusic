@@ -20,7 +20,9 @@
 
                         </div>
                         <div class="m-lrc">
-                            <p v-for="(item,index) in lrc" :key="index" :class="flag == item?'m-target':''">{{item[1]}}</p>
+                            <ul class="l-inner" :style="`top:${top}px`">
+                                <li v-for="(item,index) in lrc" :key="index" :class="flag[flag.length-1] == item?'i-active':''">{{item[1]}}</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -41,7 +43,8 @@ export default {
             time: null,
             show: false,
             lrc:[],
-            flag:[]
+            flag:[],
+            top: 60
         }
     },
     watch:{
@@ -53,9 +56,8 @@ export default {
         },
         flag(){
             if(this.show){
-                $(".m-lrc").animate({scrollTop: $(".m-target").offset().top });
-                // $('.m-lrc').scrollTop($(".m-target").offset().top)
-                console.log($(".m-target").offset().top)
+                this.top = -(this.flag.length -1) *30 +60
+                // $('.l-inner').animate({ 'top': '-' + (this.flag.length-1)* 30 + 'px'})
             }
         }
     },
@@ -76,7 +78,7 @@ export default {
                         }
                 this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
                 let lr = this.lrc.filter( v => v[0]<=this.$refs.audio.currentTime);
-                this.flag = lr[lr.length-1];
+                this.flag = lr;
                 
                 },10)
             }
@@ -110,6 +112,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    .i-active{
+        color: rgba(37, 214, 216, 0.9) !important;
+    }
     .i-play{
           .h-play{
             position: fixed;
@@ -196,11 +201,18 @@ export default {
                     width: 100%;
                     // background: #000;
                     overflow: scroll;
-                    p{
-                        line-height: 30px;
-                        width: 100%;
-                        text-align: center;
-                        color: #666;
+                    .l-inner{
+                       position: absolute;
+                       width: 100%;
+                       margin: 0;
+                       left: 0;
+                       transition: all .3s ease;
+                        li{
+                            line-height: 30px;
+                            width: 100%;
+                            text-align: center;
+                            color: #666;
+                        }
                     }
                 }
             }
