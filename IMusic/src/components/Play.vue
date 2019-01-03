@@ -17,7 +17,7 @@
                 <div class="h-mask" v-if="show">
                     <div class="m-inner">
                         <div class="m-singer">
-
+                                
                         </div>
                         <div class="m-lrc">
                             <ul class="l-inner" :style="`top:${top}px`">
@@ -57,7 +57,6 @@ export default {
         flag(){
             if(this.show){
                 this.top = -(this.flag.length -1) *30 +60
-                // $('.l-inner').animate({ 'top': '-' + (this.flag.length-1)* 30 + 'px'})
             }
         }
     },
@@ -77,9 +76,10 @@ export default {
                         return
                         }
                 this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
-                let lr = this.lrc.filter( v => v[0]<=this.$refs.audio.currentTime);
-                this.flag = lr;
-                
+                    if(this.lrc.length>0){
+                        let lr = this.lrc.filter( v => v[0]<=this.$refs.audio.currentTime);
+                        this.flag = lr;
+                    }
                 },10)
             }
         },
@@ -114,6 +114,7 @@ export default {
 <style lang="scss" scoped>
     .i-active{
         color: rgba(37, 214, 216, 0.9) !important;
+        transform: scale(1.1);
     }
     .i-play{
           .h-play{
@@ -211,7 +212,7 @@ export default {
                             line-height: 30px;
                             width: 100%;
                             text-align: center;
-                            color: #666;
+                            color: rgba(0,0,0,.25);
                         }
                     }
                 }
