@@ -16,8 +16,13 @@
             <transition name="fade">
                 <div class="h-mask" v-if="show">
                     <div class="m-inner">
+                         <mt-header :title="songs.name">
+                            <span @click="$router.go(-1);show=false" slot="left">
+                            <mt-button icon="back"></mt-button>
+                            </span>
+                        </mt-header>
                         <div class="m-singer">
-                                
+                            <img :src="songs.pic" />
                         </div>
                         <div class="m-lrc">
                             <ul class="l-inner" :style="`top:${top}px`">
@@ -44,7 +49,8 @@ export default {
             show: false,
             lrc:[],
             flag:[],
-            top: 60
+            top: 60,
+            album:{}
         }
     },
     watch:{
@@ -78,7 +84,10 @@ export default {
                 this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
                     if(this.lrc.length>0){
                         let lr = this.lrc.filter( v => v[0]<=this.$refs.audio.currentTime);
-                        this.flag = lr;
+                        let l = lr.filter(v =>v[1].length>0);
+                      
+                        this.flag = l;
+                        
                     }
                 },10)
             }
@@ -88,6 +97,7 @@ export default {
             if(resp.status == 200){
                 this.parseLyric(resp.data);
             }
+
         },
         parseLyric(text) {
             let currentTime = this.$refs.audio.currentTime;
@@ -114,7 +124,7 @@ export default {
 <style lang="scss" scoped>
     .i-active{
         color: rgba(37, 214, 216, 0.9) !important;
-        transform: scale(1.1);
+        transform: scale(1.4);
     }
     .i-play{
           .h-play{
@@ -193,6 +203,17 @@ export default {
                 .m-singer{
                     height: 50%;
                     width: 100%;
+                    overflow: hidden;
+                    // text-align: center;
+                    display:flex;
+                    align-items:center;/*垂直居中*/
+                    justify-content: center;
+                    img{
+                        width: 200px;
+                        height: 200px;
+                        border-radius: 50%;
+                        animation: turn 14s linear infinite;
+                    }
                 }
                 .m-lrc{
                     position: absolute;
@@ -212,6 +233,7 @@ export default {
                             line-height: 30px;
                             width: 100%;
                             text-align: center;
+                            font-size: 12px;
                             color: rgba(0,0,0,.25);
                         }
                     }
@@ -226,4 +248,10 @@ export default {
   opacity: 0;
   transform: translateY(100%)
 }
+
+@keyframes turn{
+    0%{ transform: rotate(0deg)}
+    100%{ transform: rotate(360deg)}
+}
+
 </style>
