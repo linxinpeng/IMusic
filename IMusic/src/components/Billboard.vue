@@ -9,7 +9,7 @@
         </div>
         <div style="height: 40px"></div>
         <div class="b-center">
-            <div class="c-item" v-for="(item,index) in songList.songs || []" :key="index" @click="play(item)">
+            <div class="c-item" v-for="(item,index) in songList.songs || songList" :key="index" @click="play(item)">
                 <span class="i-left"><i class="ion ion-md-add-circle-outline"></i></span>
                 <span class="i-right">
                     <span class="r-order">
@@ -38,9 +38,14 @@ export default {
     },
     methods:{
         async getMusic(){
-            const resp = await this.axios.get(`https://api.bzqll.com/music/netease/songList?key=579621905&id=${this.$route.query.id}&limit=10&offset=0`);
-            if(resp.status == 200){
+            if(this.$route.query.id=="五月天"){
+                const resp = await this.axios.get(`https://api.bzqll.com/music/netease/search?key=579621905&s=五月天&type=song&limit=100&offset=0`)
                 this.songList = resp.data.data;
+            }else{
+                const resp = await this.axios.get(`https://api.bzqll.com/music/netease/songList?key=579621905&id=${this.$route.query.id}&limit=10&offset=0`);
+                if(resp.status == 200){
+                    this.songList = resp.data.data;
+                }
             }
         },
         play(item){

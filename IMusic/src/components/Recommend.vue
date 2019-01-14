@@ -78,12 +78,12 @@ export default {
     },
     methods:{
         async getSongList(){
-            const resp1 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=19723756&limit=10&offset=0');
-            const resp2 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3779629&limit=10&offset=0');
-            const resp3 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=2884035&limit=10&offset=0');
-            const resp4 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3778678&limit=10&offset=0');
-            const resp5 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=2250011882&limit=10&offset=0');
-            const resp6 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=2534472105&limit=10&offset=0');
+            const resp1 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=19723756&limit=3&offset=0');
+            const resp2 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3779629&limit=3&offset=0');
+            const resp3 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=2884035&limit=3&offset=0');
+            const resp4 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3778678&limit=3&offset=0');
+            const resp5 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=2250011882&limit=3&offset=0');
+            const resp6 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=2534472105&limit=3&offset=0');
             this.bSongList = resp1.data.data;
             this.xSongList = resp2.data.data;
             this.ySongList = resp3.data.data;

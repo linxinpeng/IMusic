@@ -43,7 +43,7 @@
         <div class="h-recom">
             <h3>推荐歌单<i class="ion ion-ios-arrow-forward" /></h3>
             <ul>
-                <li v-for="(item,index) in recom" :key="index">
+                <li v-for="(item,index) in recom" :key="index" @touchstart="$router.push({path:'/billboard',query:{id:item.id}})">
                     <div class="r-img">
                         <img :src="item.src" />
                         <i class="ion ion-ios-play-circle"></i>
@@ -82,19 +82,22 @@ export default {
             ],
             recom:[
                 {
-                    src:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=342462208,241731034&fm=26&gp=0.jpg',
-                    title:'一入电音深似海',
-                    singer:'Dearrn'
+                    src:'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=969641204,494147551&fm=58',
+                    title:'你是我的青春',
+                    singer:'五月天',
+                    id:'五月天'
                 },
                  {
-                    src:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1751299247,2746970245&fm=26&gp=0.jpg',
-                    title:'最好听的还是你',
-                    singer:'Mr.Zhou'
+                    src:'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2735437136,2812997221&fm=58&bpow=1024&bpoh=1024',
+                    title:'抖音最火榜',
+                    singer:'Douyin',
+                    id:'2250011882'
                 },
                  {
-                    src:'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2833203770,4110281004&fm=26&gp=0.jpg',
-                    title:'懂我的，不懂我的',
-                    singer:'Ruerer'
+                    src:'https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=1909022031,1548857548&fm=58&bpow=885&bpoh=746',
+                    title:'最爱中国风',
+                    singer:'中国风',
+                    id:'2534472105'
                 }
             ],
             songList:{},
@@ -102,7 +105,7 @@ export default {
         }
     },
     methods:{
-       async getMusic(){
+        async getMusic(){
             const resp = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3778678&limit=10&offset=0');
             if(resp.status == 200){
                 this.songList = resp.data.data;
@@ -116,7 +119,7 @@ export default {
                 }
             }
         },
-         update(item){
+        update(item){
             this.$store.dispatch('update',item);
             this.showSearch = false
         }
@@ -224,6 +227,7 @@ export default {
                             font-size: 13px;
                             font-weight: 400;
                             overflow: hidden;
+                            white-space: nowrap;
                         }
                         p{
                             margin: 0;

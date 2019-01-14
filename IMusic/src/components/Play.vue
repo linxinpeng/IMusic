@@ -9,7 +9,7 @@
                         <h4>{{songs.name}}</h4>
                         <p>{{songs.singer}}</p>
                     </span>
-                    <span class="i-right" @click="onPlay"><i :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i></span>
+                    <span class="i-right" @touchstart="onPlay"><i :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i></span>
                 </div>
             </div>
             <div style="height: 62px"></div>
