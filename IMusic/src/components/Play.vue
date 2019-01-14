@@ -1,6 +1,6 @@
 <template>
     <div class="i-play" v-if="Object.keys(songs).length>0">
-        <div class="h-play" @click="show= true">
+        <div class="h-play" @click="show= !show">
                 <div class="p-inner">
                     <audio ref="audio" :src="songs.url"  autoplay="autoplay"></audio>
                     <div class="p-progress" :style="`width:${value}%`"></div>
@@ -9,7 +9,9 @@
                         <h4>{{songs.name}}</h4>
                         <p>{{songs.singer}}</p>
                     </span>
-                    <span class="i-right" @touchstart="onPlay"><i :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i></span>
+                    <span class="i-right" @touchstart="onPlay">
+                        <i :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i>
+                    </span>
                 </div>
             </div>
             <div style="height: 62px"></div>
@@ -72,24 +74,25 @@ export default {
                 this.$refs.audio.pause();
                 this.isPlay = false;
             }else{
-                this.$refs.audio.play();
-                this.isPlay = true;
-                this.expand();
-                this.time = setInterval(()=>{
-                    if(this.$refs.audio.currentTime == this.$refs.audio.duration){
-                        clearInterval(this.time);
-                        this.isPlay = false;
-                        return
+                if(this.songs.url){
+                    this.$refs.audio.play();
+                    this.isPlay = true;
+                    this.expand();
+                    this.time = setInterval(()=>{
+                        if(this.$refs.audio.ended){
+                            clearInterval(this.time);
+                            this.$store.dispatch('nextSong')
+                            this.isPlay = false;
+                            return
+                            }
+                        this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
+                        if(this.lrc.length>0){
+                            let lr = this.lrc.filter( v => v[0]<=this.$refs.audio.currentTime);
+                            let l = lr.filter(v =>v[1].length>0);
+                            this.flag = l;
                         }
-                this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
-                    if(this.lrc.length>0){
-                        let lr = this.lrc.filter( v => v[0]<=this.$refs.audio.currentTime);
-                        let l = lr.filter(v =>v[1].length>0);
-                      
-                        this.flag = l;
-                        
-                    }
-                },10)
+                    },10)
+                }
             }
         },
         async expand(){
@@ -196,6 +199,7 @@ export default {
             width: 100%;
             height: 100%;
             background: #fff;
+            z-index: 99;
             .m-inner{
                 position: relative;
                 width: 100%;
@@ -222,7 +226,7 @@ export default {
                     height: 150px;
                     width: 100%;
                     // background: #000;
-                    overflow: scroll;
+                    overflow: hidden;
                     .l-inner{
                        position: absolute;
                        width: 100%;

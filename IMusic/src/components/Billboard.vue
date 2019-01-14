@@ -9,20 +9,21 @@
         </div>
         <div style="height: 40px"></div>
         <div class="b-center">
-            <div class="c-item" v-for="(item,index) in songList.songs || songList" :key="index" @click="play(item)">
-                <span class="i-left"><i class="ion ion-md-add-circle-outline"></i></span>
-                <span class="i-right">
-                    <span class="r-order">
-                        {{index+1}}
-                    </span>
-                    <span class="r-left">
-                        <h3>{{item.name}}</h3>
-                        <p>{{item.singer}}</p>
-                    </span>
-                    <span class="r-right">
-                        ...
-                    </span>
+            <div class="c-header">
+                <span class="h-left" @click="playAll">
+                    <i class="ion ion-ios-play-circle"></i>播放全部(总共100首)
                 </span>
+                <span class="h-right"><i class="ion ion-ios-add"></i>&nbsp;&nbsp;&nbsp;&nbsp;点击收藏</span>
+            </div>
+            <div class="c-item" v-for="(item,index) in songList.songs || songList" :key="index" @click="play(item)">
+                <div class="i-left">
+                    <span :style="index == 0 || index == 1 || index == 2?'color:red':'color: #ccc'">{{index+1}}</span>
+                </div>
+                <div class="i-right">
+                    <mt-cell :title="item.name" :label="item.singer">
+                        <i class="ion ion-ios-more"></i>
+                    </mt-cell>
+                </div>
             </div>
         </div>
     </div>    
@@ -50,6 +51,11 @@ export default {
         },
         play(item){
             this.$store.dispatch('update',item)
+        },
+        playAll(){
+            
+            this.$store.dispatch('updateSongList',this.songList.songs);
+            this.$store.dispatch('nextSong')
         }
     },
     created(){
@@ -63,63 +69,47 @@ export default {
             position: fixed;
             top: 0;
             width: 100%;
+            z-index: 2;
         }
         .b-center{
-            span{
-                float: left;
+            .c-header{
+                width: 100%;
+                height: 48px;
+                border-radius: 15px 15px 0 0;
+                border-top: 1px solid #ccc;
+                overflow: hidden;
+                margin-top: 20px;
+                .h-left{
+                    float: left;
+                    width: 70%;
+                    height: 100%;
+                    text-align: left;
+                    padding-left: 15px;
+                    box-sizing: border-box;
+                    line-height: 48px;
+                    i{
+                        padding-right: 20px;
+                    }
+                }
+                .h-right{
+                    float: left;
+                    height: 100%;
+                    width: 30%;
+                    text-align: center;
+                    line-height: 48px;
+                    background: rgb(241,79,48);
+                    color: #fff;
+                }
             }
             .i-left{
                 width: 40px;
-                height: 55px;
-                text-align: right;
-                color: rgb(137,137,137);
-                i{
-                    line-height: 55px;
-                    font-size: 20px;
-                }
+                text-align: center;
+                line-height: 48px;
+                float: left;
             }
             .i-right{
-                width: calc(98% - 40px);
-                height: 55px;
-                box-sizing: border-box;
-                padding-left: 5px;
-                .r-order{
-                    float: left;
-                    width: 32px;
-                    height: 55px;
-                    text-align: center;
-                    line-height: 55px;
-                    font-size: 12px;
-                    color: #000;
-                }
-                .r-left{
-                    float: left;
-                    width: calc( 100% - 64px);
-                    height: 100%;
-                    overflow: hidden;
-                    border-bottom: 1px solid #eee;
-                    h3{
-                        margin: 0;
-                        margin-bottom: 5px;
-                        font-weight: 400;
-                        color: #000;
-                        font-size: 14px;
-                        margin-top: 10px;
-                    }
-                    p{
-                        color: #999;
-                        font-size: 12px;
-                        white-space: nowrap;
-                    }
-                }
-                .r-right{
-                    float: left;
-                    width: 32px;
-                    height: 55px;
-                    line-height: 55px;
-                    text-align: center;
-                    border-bottom: 1px solid #eee;
-                }
+               width: calc(98% - 40px);
+               float: left;
             }
         }
     }

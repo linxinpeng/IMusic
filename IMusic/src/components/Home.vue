@@ -43,7 +43,7 @@
         <div class="h-recom">
             <h3>推荐歌单<i class="ion ion-ios-arrow-forward" /></h3>
             <ul>
-                <li v-for="(item,index) in recom" :key="index" @touchstart="$router.push({path:'/billboard',query:{id:item.id}})">
+                <li v-for="(item,index) in recom" :key="index" @click="$router.push({path:'/billboard',query:{id:item.id}})">
                     <div class="r-img">
                         <img :src="item.src" />
                         <i class="ion ion-ios-play-circle"></i>

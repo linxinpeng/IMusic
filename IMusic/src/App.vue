@@ -16,11 +16,11 @@ export default {
     }
   },
   mounted(){
-    // console.log(this.store)
+  
   },
   computed:{
     songs(){
-      return this.$store.state.songList
+      return this.$store.state.song
     }
   }
 }
