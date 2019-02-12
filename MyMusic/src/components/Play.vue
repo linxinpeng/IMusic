@@ -235,9 +235,12 @@ export default {
                        transition: all .3s ease;
                         li{
                             line-height: 30px;
+                            height: 30px;
+                            display: flex;
+                            align-content: center;
                             width: 100%;
                             text-align: center;
-                            font-size: 12px;
+                            font-size: .7rem;
                             color: rgba(0,0,0,.25);
                         }
                     }

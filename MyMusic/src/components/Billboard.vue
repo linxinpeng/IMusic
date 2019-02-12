@@ -30,6 +30,7 @@
 </template>
 <script>
 import IPlay from './Play'
+import { Indicator } from 'mint-ui';
 export default {
     components:{IPlay},
     data(){
@@ -39,13 +40,16 @@ export default {
     },
     methods:{
         async getMusic(){
+            Indicator.open('加载中...');
             if(this.$route.query.id=="五月天"){
                 const resp = await this.axios.get(`https://api.bzqll.com/music/netease/search?key=579621905&s=五月天&type=song&limit=100&offset=0`)
                 this.songList = resp.data.data;
+                Indicator.close();
             }else{
                 const resp = await this.axios.get(`https://api.bzqll.com/music/netease/songList?key=579621905&id=${this.$route.query.id}&limit=10&offset=0`);
                 if(resp.status == 200){
                     this.songList = resp.data.data;
+                    Indicator.close();
                 }
             }
         },
@@ -75,7 +79,7 @@ export default {
             .c-header{
                 width: 100%;
                 height: 48px;
-                border-radius: 15px 15px 0 0;
+                // border-radius: 15px 15px 0 0;
                 border-top: 1px solid #ccc;
                 overflow: hidden;
                 margin-top: 20px;

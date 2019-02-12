@@ -56,6 +56,7 @@
 </template>
 <script>
 import IPlay from './Play'
+import { Indicator } from 'mint-ui';
 export default {
     components:{IPlay},
     data(){
@@ -78,6 +79,7 @@ export default {
     },
     methods:{
         async getSongList(){
+            Indicator.open('加载中...');
             const resp1 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=19723756&limit=3&offset=0');
             const resp2 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=3779629&limit=3&offset=0');
             const resp3 = await this.axios.get('https://api.bzqll.com/music/netease/songList?key=579621905&id=2884035&limit=3&offset=0');
@@ -90,6 +92,9 @@ export default {
             this.rSongList = resp4.data.data;
             this.dSongList = resp5.data.data;
             this.gSongList = resp6.data.data;
+            if(Object.keys(this.gSongList).length>0){
+                Indicator.close()
+            }
         },
         toBillboard(id){      
             this.$router.push({path:'/billboard',query:{id}})
