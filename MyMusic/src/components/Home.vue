@@ -120,11 +120,22 @@ export default {
         update(item){
             this.$store.dispatch('update',item);
             this.showSearch = false
+        },
+        pushHistory() {
+            var state = {
+                title: "title",
+                url: "#"
+            };
+            window.history.pushState(state, "title", "#");
         }
     },
     mounted() {
+        this.pushHistory();
         this.getMusic();
-        
+        window.addEventListener("popstate", function(e) {
+            this.pushHistory();
+          return
+        }, false)
     },
 }
 </script>

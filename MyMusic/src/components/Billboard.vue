@@ -42,7 +42,7 @@ export default {
         async getMusic(){
             Indicator.open('加载中...');
             if(this.$route.query.id=="五月天"){
-                const resp = await this.axios.get(`https://api.bzqll.com/music/netease/search?key=579621905&s=五月天&type=song&limit=100&offset=0`)
+                const resp = await this.axios.get(`https://api.bzqll.com/music/netease/search?key=579621905&s=五月天&type=song&limit=10&offset=0`)
                 this.songList = resp.data.data;
                 Indicator.close();
             }else{

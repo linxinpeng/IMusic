@@ -1,16 +1,16 @@
 <template>
     <div class="i-play" v-if="Object.keys(songs).length>0">
-        <div class="h-play" @click="show= !show">
+        <div class="h-play">
                 <div class="p-inner">
                     <audio ref="audio" :src="songs.url"  autoplay="autoplay"></audio>
                     <div class="p-progress" :style="`width:${value}%`"></div>
-                    <span class="i-left"><img :src="songs.pic" /></span>
+                    <span class="i-left"  @click="show= !show"><img :src="songs.pic" /></span>
                     <span class="i-center">
                         <h4>{{songs.name}}</h4>
                         <p>{{songs.singer}}</p>
                     </span>
-                    <span class="i-right" @touchstart="onPlay">
-                        <i :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i>
+                    <span class="i-right">
+                        <i  @touchstart="onPlay" :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i>
                     </span>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                 <div class="h-mask" v-if="show">
                     <div class="m-inner">
                          <mt-header :title="songs.name">
-                            <span @click="$router.go(-1);show=false" slot="left">
+                            <span @click="show=false" slot="left">
                             <mt-button icon="back"></mt-button>
                             </span>
                         </mt-header>
@@ -235,11 +235,9 @@ export default {
                        transition: all .3s ease;
                         li{
                             line-height: 30px;
-                            height: 30px;
-                            display: flex;
-                            align-content: center;
                             width: 100%;
                             text-align: center;
+                            white-space: nowrap;
                             font-size: .7rem;
                             color: rgba(0,0,0,.25);
                         }

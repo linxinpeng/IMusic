@@ -16,7 +16,6 @@ export default {
     }
   },
   mounted(){
-  
   },
   computed:{
     songs(){
