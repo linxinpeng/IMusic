@@ -3,11 +3,16 @@
         <div class="h-play">
                 <div class="p-inner">
                     <audio ref="audio" :src="songs.url"  autoplay="autoplay"></audio>
-                    <div class="p-progress" :style="`width:${value}%`"></div>
+                    <!-- <div class="p-progress" :style="`width:${value}%`"></div> -->
                     <span class="i-left"  @click="show= !show"><img :src="songs.pic" /></span>
                     <span class="i-center">
-                        <h4>{{songs.name}}</h4>
-                        <p>{{songs.singer}}</p>
+                        <h4>{{songs.name}} - {{songs.singer}}</h4>
+                        <p>
+                            <span>{{nowPlay}}</span>
+                            <span>{{totalTime}}</span>
+                        </p>
+                        <mt-progress :value="value" :bar-height="1" style="height: 1px;padding-top:3px"></mt-progress>
+                        <!-- <p></p> -->
                     </span>
                     <span class="i-right">
                         <i  @touchstart="onPlay" :class="isPlay?'ion ion-ios-pause':'ion ion-ios-play-circle'"></i>
@@ -52,7 +57,9 @@ export default {
             lrc:[],
             flag:[],
             top: 60,
-            album:{}
+            album:{},
+            nowPlay: '00:00',
+            totalTime: '00:00'
         }
     },
     watch:{
@@ -78,6 +85,8 @@ export default {
                     this.$refs.audio.play();
                     this.isPlay = true;
                     this.expand();
+                   
+
                     this.time = setInterval(()=>{
                         if(this.$refs.audio.ended){
                             clearInterval(this.time);
@@ -86,6 +95,33 @@ export default {
                             return
                             }
                         this.value = (this.$refs.audio.currentTime/this.$refs.audio.duration)*100;
+
+                        if(this.$refs.audio.duration){
+                            var tMin = 0,tSecond = 0,tTime = parseInt(this.$refs.audio.duration);
+                            if(tTime>60){
+                                tMin = parseInt(tTime / 60);
+                                tSecond = tTime % 60;
+                            }else{
+                                tSecond = tTime;
+                            }
+                            tMin = tMin>10?tMin:'0'+tMin;
+                            tSecond = tSecond>10?tSecond:'0'+tSecond;
+                            this.totalTime = tMin+':'+tSecond;
+                        }
+
+                        var min = 0,second = 0,nowTime= parseInt(this.$refs.audio.currentTime);
+                        if(nowTime>=60){
+                            min = parseInt(nowTime/ 60);
+                            second = nowTime % 60;
+                        }else{
+                            second = nowTime;
+                        }
+
+                        min = min < 10? '0'+min:min;
+                        second = second < 10? '0'+second:second;
+
+                        this.nowPlay = min + ':' + second;
+
                         if(this.lrc.length>0){
                             let lr = this.lrc.filter( v => v[0]<=this.$refs.audio.currentTime);
                             let l = lr.filter(v =>v[1].length>0);
@@ -177,8 +213,10 @@ export default {
                     }
                     p{
                         margin: 0;
-                        font-size: 12px;
+                        font-size: 0.8rem;
                         margin-top: 3px;
+                        display: flex;
+                        justify-content: space-between;
                     }
                 }
                 .i-right{
